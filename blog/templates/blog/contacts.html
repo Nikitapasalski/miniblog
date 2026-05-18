@@ -1,0 +1,33 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Контакти — МініБлог{% endblock %}
+
+{% block content %}
+<div class="page-nav">
+    <a href="{% url 'home' %}">← На головну</a>
+</div>
+
+<h1 class="section-title">📬 Контакти</h1>
+
+<div class="posts-grid">
+    <div class="profile-card">
+        <div style="font-size:2rem;margin-bottom:12px;">📧</div>
+        <h3 style="margin-bottom:6px;">Email</h3>
+        <p style="color:var(--text-light);">admin@miniblog.com</p>
+    </div>
+    <div class="profile-card">
+        <div style="font-size:2rem;margin-bottom:12px;">💬</div>
+        <h3 style="margin-bottom:6px;">Telegram</h3>
+        <p style="color:var(--text-light);">@miniblog_support</p>
+    </div>
+    <div class="profile-card">
+        <div style="font-size:2rem;margin-bottom:12px;">🐙</div>
+        <h3 style="margin-bottom:6px;">GitHub</h3>
+        <p style="color:var(--text-light);">github.com/miniblog</p>
+    </div>
+</div>
+
+<div style="text-align:center;margin-top:32px;">
+    <a href="{% url 'home' %}" class="btn btn-primary">← На головну</a>
+</div>
+{% endblock %}

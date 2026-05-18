@@ -1,0 +1,45 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Про нас — МініБлог{% endblock %}
+
+{% block content %}
+<div class="page-nav">
+    <a href="{% url 'home' %}">← На головну</a>
+</div>
+
+<h1 class="section-title">ℹ️ Про нас</h1>
+
+<div class="profile-card">
+    <p style="font-size:1.05rem;line-height:1.8;margin-bottom:16px;">
+        <strong>МініБлог</strong> — це навчальний проєкт, створений у рамках вивчення Django.
+        Тут ми ділимося цікавими думками, навчальними матеріалами та корисними статтями.
+    </p>
+    <p style="line-height:1.8;color:var(--text-light);">
+        Проєкт реалізований за допомогою <strong>Django</strong>, <strong>Python</strong> та чистого CSS.
+        Кожен може зареєструватися, залишати коментарі та оцінювати пости.
+    </p>
+</div>
+
+<div class="posts-grid" style="margin-top:24px;">
+    <div class="profile-card">
+        <div style="font-size:2rem;margin-bottom:12px;">🎯</div>
+        <h3 style="margin-bottom:8px;">Наша мета</h3>
+        <p style="color:var(--text-light);font-size:0.95rem;">Практика Django і ООП через реальний проєкт з усіма класичними функціями веб-додатку.</p>
+    </div>
+    <div class="profile-card">
+        <div style="font-size:2rem;margin-bottom:12px;">🛠️</div>
+        <h3 style="margin-bottom:8px;">Технології</h3>
+        <p style="color:var(--text-light);font-size:0.95rem;">Django, Python, SQLite, HTML/CSS без фреймворків.</p>
+    </div>
+    <div class="profile-card">
+        <div style="font-size:2rem;margin-bottom:12px;">📚</div>
+        <h3 style="margin-bottom:8px;">Лабораторні</h3>
+        <p style="color:var(--text-light);font-size:0.95rem;">Лаби 2-8: від базового Django-проєкту до повноцінної аутентифікації.</p>
+    </div>
+</div>
+
+<div style="text-align:center;margin-top:32px;">
+    <a href="{% url 'home' %}" class="btn btn-primary">← На головну</a>
+    <a href="{% url 'contacts' %}" class="btn btn-outline" style="margin-left:10px;">📬 Контакти</a>
+</div>
+{% endblock %}

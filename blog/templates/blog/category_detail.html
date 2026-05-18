@@ -1,0 +1,53 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ category.name }} — МініБлог{% endblock %}
+
+{% block content %}
+<div class="page-nav">
+    <a href="{% url 'home' %}">← На головну</a>
+</div>
+
+<div class="category-header">
+    <h1>📂 {{ category.name }}</h1>
+    {% if category.description %}
+        <p>{{ category.description }}</p>
+    {% endif %}
+    <p style="margin-top:8px;font-size:0.85rem;color:var(--text-light);">
+        Постів у категорії: <strong>{{ posts.count }}</strong>
+    </p>
+</div>
+
+{% if posts %}
+    <div class="posts-grid">
+        {% for post in posts %}
+            <article class="post-card">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-card__img">
+                {% else %}
+                    <div class="post-card__img-placeholder">📝</div>
+                {% endif %}
+
+                <div class="post-card__body">
+                    <a href="{% url 'post_detail' post.slug %}" class="post-card__title">
+                        {{ post.title }}
+                    </a>
+                    <p class="post-card__excerpt">{{ post.content|truncatewords:20 }}</p>
+                    <div class="post-card__meta">
+                        <span>✍️ {{ post.author.username }}</span>
+                        <span>{{ post.created_at|date:"d.m.Y" }}</span>
+                        {% with avg=post.average_rating %}
+                            {% if avg %}<span class="post-card__rating">★ {{ avg }}</span>{% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state__icon">📭</div>
+        <h3>В цій категорії поки немає постів</h3>
+        <a href="{% url 'home' %}" class="btn btn-primary" style="margin-top:16px;">На головну</a>
+    </div>
+{% endif %}
+{% endblock %}

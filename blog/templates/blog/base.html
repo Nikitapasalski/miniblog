@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}МініБлог{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ── HEADER (Лаба 5) ─────────────────────── -->
+<header class="header">
+    <div class="header__inner">
+        <a href="{% url 'home' %}" class="header__logo">
+            ✍️ МініБлог
+        </a>
+
+        <nav class="nav">
+            <a href="{% url 'home' %}" class="nav__link">🏠 Головна</a>
+
+            <!-- Випадаюче меню категорій (Лаба 5) -->
+            <div class="nav__dropdown">
+                <button class="nav__dropdown-btn">
+                    📂 Категорії ▾
+                </button>
+                <div class="nav__dropdown-menu">
+                    <a href="{% url 'home' %}">Всі пости</a>
+                    {% for cat in categories %}
+                        <a href="{% url 'category_detail' cat.slug %}">{{ cat.name }}</a>
+                    {% empty %}
+                        <a href="#">Категорій немає</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <a href="{% url 'about' %}" class="nav__link">ℹ️ Про нас</a>
+            <a href="{% url 'contacts' %}" class="nav__link">📬 Контакти</a>
+        </nav>
+
+        <!-- Auth кнопки (Лаба 8) -->
+        <div class="header__auth">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="btn btn-outline btn-sm">👤 {{ user.username }}</a>
+                <a href="{% url 'logout' %}" class="btn btn-sm" style="background:#fee2e2;color:#dc2626;">Вийти</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline btn-sm">Увійти</a>
+                <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Реєстрація</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- ── MAIN ────────────────────────────────── -->
+<main class="main">
+    <!-- Django messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message message-{{ message.tags }}">
+                    {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% elif message.tags == 'info' %}ℹ️{% else %}⚠️{% endif %}
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<!-- ── FOOTER (Лаба 5) ─────────────────────── -->
+<footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__brand">
+            <h3>✍️ МініБлог</h3>
+            <p>Місце для думок, ідей та цікавих статей. Діліться знаннями зі світом!</p>
+        </div>
+
+        <div>
+            <p class="footer__title">Навігація</p>
+            <ul class="footer__links">
+                <li><a href="{% url 'home' %}">Головна</a></li>
+                <li><a href="{% url 'about' %}">Про нас</a></li>
+                <li><a href="{% url 'contacts' %}">Контакти</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <p class="footer__title">Категорії</p>
+            <ul class="footer__links">
+                {% for cat in categories %}
+                    <li><a href="{% url 'category_detail' cat.slug %}">{{ cat.name }}</a></li>
+                {% empty %}
+                    <li><span>Поки немає</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <p class="footer__title">Акаунт</p>
+            <ul class="footer__links">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Мій кабінет</a></li>
+                    <li><a href="{% url 'change_password' %}">Змінити пароль</a></li>
+                    <li><a href="{% url 'logout' %}">Вийти</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Увійти</a></li>
+                    <li><a href="{% url 'register' %}">Реєстрація</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="footer__bottom">
+        <p>© 2025 МініБлог. Навчальний проєкт Django.</p>
+    </div>
+</footer>
+
+</body>
+</html>

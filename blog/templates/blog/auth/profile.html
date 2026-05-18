@@ -1,0 +1,101 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ title }} — МініБлог{% endblock %}
+
+{% block content %}
+<h1 class="section-title">
+    {% if user.is_staff %}🛡️{% else %}👤{% endif %} {{ title }}
+</h1>
+
+<!-- ІНФО ПРО ЮЗЕРА -->
+<div class="profile-card" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+    <div class="profile-avatar">{{ user.username|first|upper }}</div>
+    <div>
+        <h2>{{ user.username }}</h2>
+        <p class="profile-card__meta">
+            📧 {{ user.email|default:"Email не вказано" }}<br>
+            🗓️ Зареєстрований: {{ user.date_joined|date:"d.m.Y" }}
+        </p>
+        {% if user.is_staff %}
+            <span class="badge badge-admin">Адміністратор</span>
+        {% else %}
+            <span class="badge badge-user">Користувач</span>
+        {% endif %}
+    </div>
+    <div style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="{% url 'change_password' %}" class="btn btn-outline btn-sm">🔑 Змінити пароль</a>
+    </div>
+</div>
+
+<!-- КОМЕНТАРІ -->
+<h2 class="section-title" style="margin-top:32px;">
+    💬 {% if user.is_staff %}Всі коментарі{% else %}Мої коментарі{% endif %}
+</h2>
+
+{% if comments %}
+    <div style="background:var(--white);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
+        <table class="table">
+            <thead>
+                <tr>
+                    {% if user.is_staff %}<th>Автор</th>{% endif %}
+                    <th>Пост</th>
+                    <th>Коментар</th>
+                    <th>Дата</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                    <tr>
+                        {% if user.is_staff %}
+                            <td><strong>{{ comment.author.username }}</strong></td>
+                        {% endif %}
+                        <td>
+                            <a href="{% url 'post_detail' comment.post.slug %}">
+                                {{ comment.post.title|truncatechars:40 }}
+                            </a>
+                        </td>
+                        <td>{{ comment.content|truncatechars:60 }}</td>
+                        <td style="white-space:nowrap;">{{ comment.created_at|date:"d.m.Y" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="empty-state" style="padding:40px;">
+        <div class="empty-state__icon">💬</div>
+        <h3>Ще немає коментарів</h3>
+        <a href="{% url 'home' %}" class="btn btn-primary" style="margin-top:12px;">Переглянути пости</a>
+    </div>
+{% endif %}
+
+<!-- МОЇ ОЦІНКИ -->
+{% if not user.is_staff and user_ratings %}
+    <h2 class="section-title" style="margin-top:32px;">⭐ Мої оцінки</h2>
+    <div style="background:var(--white);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Пост</th>
+                    <th>Оцінка</th>
+                    <th>Дата</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rating in user_ratings %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'post_detail' rating.post.slug %}">
+                                {{ rating.post.title|truncatechars:50 }}
+                            </a>
+                        </td>
+                        <td style="color:#f59e0b;font-weight:600;">★ {{ rating.score }}/5</td>
+                        <td>{{ rating.created_at|date:"d.m.Y" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+{% endblock %}

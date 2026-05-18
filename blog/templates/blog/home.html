@@ -1,0 +1,84 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="hero">
+    <h1>✍️ МініБлог</h1>
+    <p>Читай цікаві статті, ділись думками та спілкуйся з авторами</p>
+</div>
+
+<!-- ФІЛЬТР КАТЕГОРІЙ (Лаба 5) -->
+<div class="category-filter">
+    <a href="{% url 'home' %}" class="{% if not selected_category %}active{% endif %}">Всі</a>
+    {% for cat in categories %}
+        <a href="?category={{ cat.slug }}" class="{% if selected_category == cat.slug %}active{% endif %}">
+            {{ cat.name }}
+        </a>
+    {% endfor %}
+</div>
+
+<!-- ПОСТИ -->
+<h2 class="section-title">📰 Останні пости</h2>
+
+{% if posts %}
+    <div class="posts-grid">
+        {% for post in posts %}
+            <article class="post-card">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-card__img">
+                {% else %}
+                    <div class="post-card__img-placeholder">📝</div>
+                {% endif %}
+
+                <div class="post-card__body">
+                    {% if post.category %}
+                        <a href="{% url 'category_detail' post.category.slug %}" class="post-card__category">
+                            {{ post.category.name }}
+                        </a>
+                    {% endif %}
+
+                    <a href="{% url 'post_detail' post.slug %}" class="post-card__title">
+                        {{ post.title }}
+                    </a>
+
+                    <p class="post-card__excerpt">
+                        {{ post.content|truncatewords:20 }}
+                    </p>
+
+                    <div class="post-card__meta">
+                        <span>✍️ {{ post.author.username }}</span>
+                        <span>{{ post.created_at|date:"d.m.Y" }}</span>
+                        {% with avg=post.average_rating %}
+                            {% if avg %}
+                                <span class="post-card__rating">★ {{ avg }}</span>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state__icon">📭</div>
+        <h3>Постів поки немає</h3>
+        <p>Зайдіть пізніше або оберіть іншу категорію</p>
+    </div>
+{% endif %}
+
+<!-- ФОРМА РОЗСИЛКИ (Лаба 7) -->
+<div class="newsletter-section">
+    <h3>📧 Підпишіться на розсилку</h3>
+    <p>Отримуйте найцікавіші статті прямо на пошту</p>
+    <form action="{% url 'subscribe_newsletter' %}" method="post" class="newsletter-form">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Ваше ім'я" class="form-control">
+        <input type="email" name="email" placeholder="Ваш email" class="form-control" required>
+        <button type="submit" class="btn btn-primary">Підписатись</button>
+    </form>
+</div>
+
+{% endblock %}
